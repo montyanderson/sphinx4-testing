@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.SpeechResult;
-import edu.cmu.sphinx.api.StreamSpeechRecognizer;
+import edu.cmu.sphinx.api.LiveSpeechRecognizer;
 
 public class TranscriberDemo {
 
@@ -21,12 +21,11 @@ public class TranscriberDemo {
         configuration
                 .setLanguageModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
 
-        StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(
-                configuration);
-        InputStream stream = new FileInputStream(new File("test.wav"));
+		LiveSpeechRecognizer recognizer = new LiveSpeechRecognizer(configuration);
+		// Start recognition process pruning previously cached data.
+		recognizer.startRecognition(true);
+		SpeechResult result = recognizer.getResult();
 
-        recognizer.startRecognition(stream);
-        SpeechResult result;
         while ((result = recognizer.getResult()) != null) {
             System.out.format("Hypothesis: %s\n", result.getHypothesis());
         }
